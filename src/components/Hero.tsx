@@ -1,8 +1,23 @@
 import { ChevronRight, Star } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const onLoaded = () => {
+      video.playbackRate = 1.8;
+    };
+    video.addEventListener('loadedmetadata', onLoaded);
+    video.addEventListener('canplay', onLoaded);
+    if (video.readyState >= 2) onLoaded();
+    return () => {
+      video.removeEventListener('loadedmetadata', onLoaded);
+      video.removeEventListener('canplay', onLoaded);
+    };
+  }, []);
 
   return (
     <section id="home" className="relative h-screen min-h-[700px] w-full overflow-hidden">
@@ -18,11 +33,11 @@ export function Hero() {
           className="w-full h-full object-cover"
         >
           <source
-            src="https://cdn.mevoyages.com/A%20Tier%20Exotics/hero.mp4"
+            src="https://cdn.mevoyages.com/A%20Tier%20Exotics/hero-mobile.mp4"
             type="video/mp4"
           />
           <source
-            src="https://cdn.mevoyages.com/A%20Tier%20Exotics/hero-mobile.mp4"
+            src="https://cdn.mevoyages.com/A%20Tier%20Exotics/hero.mp4"
             type="video/mp4"
           />
         </video>
